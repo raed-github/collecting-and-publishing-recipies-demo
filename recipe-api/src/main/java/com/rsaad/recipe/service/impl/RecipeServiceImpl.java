@@ -2,8 +2,11 @@ package com.rsaad.recipe.service.impl;
 
 import com.rsaad.recipe.constants.ApplicationConstants;
 import com.rsaad.recipe.dto.recipe.RecipeCriteria;
+import com.rsaad.recipe.exceptions.category.MissingFromRequestException;
 import com.rsaad.recipe.exceptions.recipe.RecipeBaseException;
+import com.rsaad.recipe.exceptions.recipe.RecipeNameExistException;
 import com.rsaad.recipe.exceptions.recipe.RecipeNotFoundException;
+import com.rsaad.recipe.model.Category;
 import com.rsaad.recipe.model.Recipe;
 import com.rsaad.recipe.repository.CategoryRepository;
 import com.rsaad.recipe.repository.RecipeRepository;
@@ -11,6 +14,8 @@ import com.rsaad.recipe.search.RecipeSpecificationBuilder;
 import com.rsaad.recipe.search.SearchCriteria;
 import com.rsaad.recipe.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.cache.annotation.CachePut;
+//import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +69,7 @@ public class RecipeServiceImpl implements RecipeService {
     public Recipe saveRecipe(Recipe recipe) {
         return recipeRepository.save(recipe);
     }
+    @Override
     public List<Recipe> findBySearchCriteria(Specification<Recipe> spec, Pageable page) {
         Sort sort = page.getSort();
         List<Recipe> recipes = null;

@@ -61,5 +61,4 @@ public class RecipeController {
         Recipe savedRecipe = recipeService.saveRecipe(dtoMapper.toRecipe(recipeRequest));
         return new ResponseEntity<>(dtoMapper.toRecipeResponce(savedRecipe),HttpStatus.CREATED);
     }
-
 }

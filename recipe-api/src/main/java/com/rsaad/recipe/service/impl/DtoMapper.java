@@ -3,6 +3,8 @@ package com.rsaad.recipe.service.impl;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import com.rsaad.recipe.constants.ApplicationConstants;
+import com.rsaad.recipe.controller.CategoryController;
 import com.rsaad.recipe.controller.RecipeController;
 import com.rsaad.recipe.dto.category.CategoryRequest;
 import com.rsaad.recipe.dto.category.CategoryResponse;
@@ -77,10 +79,16 @@ public class DtoMapper {
     }
 
     public CategoryResponse toCategoryResponse(Category category){
+        Link selfLink = linkTo(methodOn(CategoryController.class)
+                .findCategoryById(category.getId())).withSelfRel();
+        Link recipiesLink = linkTo(methodOn(CategoryController.class)
+                .findCategoryRecipies(category.getId())).withRel(ApplicationConstants.WITH_REL_RECIPIES);
         return (CategoryResponse.builder()
                 .id(category.getId())
                 .category(category.getCategory())
-                .build());
+                .build())
+                .add(selfLink)
+                .add(recipiesLink);
     }
     public Direction toDirection(DirectionRequest directionRequest){
         return Direction.builder().step(directionRequest.getStep()).build();

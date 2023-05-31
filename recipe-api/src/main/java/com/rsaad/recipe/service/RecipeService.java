@@ -14,5 +14,5 @@ public interface RecipeService {
     public Recipe findRecipeById(Long id);
     public List<Recipe> findAll(RecipeCriteria recipeCriteria,Pageable pageable) throws RecipeNameExistException;
     public Recipe saveRecipe(Recipe recipe);
-
+    public List<Recipe>  findBySearchCriteria(Specification<Recipe> spec, Pageable page);
 }
