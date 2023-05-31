@@ -53,12 +53,14 @@ public class RecipeController {
     @GetMapping("/{id}")
     public ResponseEntity findRecipeById(@PathVariable("id") Long id){
         Recipe recipe = recipeService.findRecipeById(id);
-        return new ResponseEntity(dtoMapper.toRecipeResponce(recipe).removeLinks(),HttpStatus.OK);
+        RecipeResponse recipeResponse = dtoMapper.toRecipeResponce(recipe);
+        return new ResponseEntity(recipeResponse.removeLinks(),HttpStatus.OK);
     }
-
     @PostMapping
     public ResponseEntity saveRecipe(@Valid @RequestBody RecipeRequest recipeRequest){
-        Recipe savedRecipe = recipeService.saveRecipe(dtoMapper.toRecipe(recipeRequest));
-        return new ResponseEntity<>(dtoMapper.toRecipeResponce(savedRecipe),HttpStatus.CREATED);
+         Recipe recipe = dtoMapper.toRecipe(recipeRequest);
+         Recipe savedRecipe = recipeService.saveRecipe(recipe);
+         RecipeResponse recipeResponse = dtoMapper.toRecipeResponce(savedRecipe);
+         return new ResponseEntity<>(recipeResponse,HttpStatus.CREATED);
     }
 }

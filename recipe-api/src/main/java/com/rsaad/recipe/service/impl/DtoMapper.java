@@ -115,9 +115,13 @@ public class DtoMapper {
                 .id(recipe.getId())
                 .name(recipe.getName())
                 .yield(recipe.getYield())
-                .categories(recipe.getCategories().stream().map(this::toCategoryRequest).collect(Collectors.toSet()))
-                .ingredients(recipe.getIngredients().stream().map(this::toIngredientRequest).collect(Collectors.toSet()))
-                .directions(recipe.getDirections().stream().map(this::toDirectionRequest).collect(Collectors.toSet()))
+                .difficultyLevel(recipe.getDifficultyLevel())
+                .cookingTime(recipe.getCookingTime())
+                .preparationTime(recipe.getPreparationTime())
+                .serves(recipe.getServes())
+                .categories(recipe.getCategories()!=null?recipe.getCategories().stream().map(this::toCategoryRequest).collect(Collectors.toSet()):null)
+                .ingredients(recipe.getIngredients()!=null?recipe.getIngredients().stream().map(this::toIngredientRequest).collect(Collectors.toSet()):null)
+                .directions(recipe.getDirections()!=null?recipe.getDirections().stream().map(this::toDirectionRequest).collect(Collectors.toSet()):null)
                 .build();
     }
 

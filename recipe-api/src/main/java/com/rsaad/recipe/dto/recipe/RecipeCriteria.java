@@ -23,4 +23,10 @@ public class RecipeCriteria {
     private String cookingTime;
     private String preparationTime;
     private String difficultyLevel;
+
+    public boolean isEmpty() {
+        return (this.name == null && this.category == null
+        &&this.cookingTime==null && this.preparationTime ==null
+                && this.difficultyLevel ==null);
+    }
 }

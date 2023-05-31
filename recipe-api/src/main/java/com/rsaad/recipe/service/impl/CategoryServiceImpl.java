@@ -46,7 +46,6 @@ public class CategoryServiceImpl implements CategoryService {
             throw new CategoryNotFoundException(ApplicationConstants.CATEGORY_NOT_FOUND);
         });
     }
-
     @Override
     public List<Category> findAll() {
         return categoryRepository.findAll();

@@ -54,7 +54,7 @@ public class Recipe extends Auditable<String> implements Serializable {
     @NotBlank(message = ApplicationConstants.DIFFICULTY_LEVEL_TIME_IS_MANDATORY)
     private String difficultyLevel;
 
-    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     @JoinTable(name = "recipe_category",
             joinColumns = {
                     @JoinColumn(name = "category_id", referencedColumnName = "id",

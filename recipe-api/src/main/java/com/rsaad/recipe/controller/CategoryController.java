@@ -40,7 +40,8 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity findCategoryById(@PathVariable Long id) {
         Category category = categoryService.findById(id);
-        return new ResponseEntity(dtoMapper.toCategoryResponse(category).removeLinks(),HttpStatus.OK);
+        CategoryResponse categoryResponse = dtoMapper.toCategoryResponse(category);
+        return new ResponseEntity(categoryResponse.removeLinks(),HttpStatus.OK);
     }
 
     @GetMapping("/{id}/recipies")
@@ -53,6 +54,7 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity saveCategory(@Valid @RequestBody CategoryRequest categoryRequest){
         Category savedCategory = categoryService.saveCategory(dtoMapper.toCategory(categoryRequest));
-        return new ResponseEntity<>(dtoMapper.toCategoryResponse(savedCategory),HttpStatus.CREATED);
+        CategoryResponse categoryResponse = dtoMapper.toCategoryResponse(savedCategory);
+        return new ResponseEntity<>(categoryResponse,HttpStatus.CREATED);
     }
 }

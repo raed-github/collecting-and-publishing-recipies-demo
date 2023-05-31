@@ -6,7 +6,7 @@ import com.rsaad.recipe.exceptions.category.MissingFromRequestException;
 import com.rsaad.recipe.exceptions.recipe.RecipeBaseException;
 import com.rsaad.recipe.exceptions.recipe.RecipeNameExistException;
 import com.rsaad.recipe.exceptions.recipe.RecipeNotFoundException;
-import com.rsaad.recipe.model.Category;
+
 import com.rsaad.recipe.model.Recipe;
 import com.rsaad.recipe.repository.CategoryRepository;
 import com.rsaad.recipe.repository.RecipeRepository;
@@ -52,6 +52,10 @@ public class RecipeServiceImpl implements RecipeService {
     }
     @Override
     public List<Recipe> findAll(RecipeCriteria recipeCriteria,Pageable pageable) {
+       if(recipeCriteria.isEmpty())
+       {
+           return recipeRepository.findAll();
+       }
         try {
             RecipeSpecificationBuilder recipeSpecificationBuilder = new RecipeSpecificationBuilder();
             List<SearchCriteria> searchCriteriaList = dtoMapper.recipeToSearchCriteria(recipeCriteria);
@@ -66,9 +70,22 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe saveRecipe(Recipe recipe) {
+    public Recipe saveRecipe(Recipe recipe) throws RecipeNameExistException {
+        if(recipe.getCategories()==null){
+            throw new MissingFromRequestException(ApplicationConstants.CATEGORY_MISSING_FROM_RECIPE_REQUEST);
+        }else if(recipe.getIngredients()==null){
+            throw new MissingFromRequestException(ApplicationConstants.DIRECTIONS_MISSING_FROM_RECIPE_REQUEST);
+        }else if(recipe.getDirections() == null){
+            throw new MissingFromRequestException(ApplicationConstants.INGREDIENTS_MISSING_FROM_RECIPE_REQUEST);
+        }
+        String recipeName = recipe.getName();
+        Recipe saveRecipe = recipeRepository.findByName(recipeName);
+        if (saveRecipe != null) {
+            throw new RecipeNameExistException(ApplicationConstants.RECIPE_NAME_ALREADY_USED);
+        }
         return recipeRepository.save(recipe);
     }
+
     @Override
     public List<Recipe> findBySearchCriteria(Specification<Recipe> spec, Pageable page) {
         Sort sort = page.getSort();

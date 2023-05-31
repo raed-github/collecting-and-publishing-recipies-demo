@@ -1,7 +1,9 @@
 package com.rsaad.recipe.exceptions.controller;
 
 import com.rsaad.recipe.constants.ApplicationConstants;
-import com.rsaad.recipe.exceptions.MissingFromRequestException;
+import com.rsaad.recipe.exceptions.category.MissingFromRequestException;
+import com.rsaad.recipe.exceptions.category.CategoryNameExistException;
+import com.rsaad.recipe.exceptions.category.CategoryNotFoundException;
 import com.rsaad.recipe.exceptions.error.ErrorResult;
 import com.rsaad.recipe.exceptions.recipe.RecipeNameExistException;
 import com.rsaad.recipe.exceptions.recipe.RecipeNotFoundException;
@@ -32,6 +34,20 @@ public class RecipeExceptionController {
 
     @ExceptionHandler(value = RecipeNotFoundException.class)
     public ResponseEntity<Object> exception(RecipeNotFoundException exception){
+        return new ResponseEntity<Object>(ErrorDetail.builder().message(exception.getMessage())
+                .date(LocalDate.now())
+                .build(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = {CategoryNameExistException.class})
+    public ResponseEntity<Object> exception(CategoryNameExistException exception){
+        return new ResponseEntity<Object>(ErrorDetail.builder().message(exception.getMessage())
+                .date(LocalDate.now())
+                .build(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(value = CategoryNotFoundException.class)
+    public ResponseEntity<Object> exception(CategoryNotFoundException exception){
         return new ResponseEntity<Object>(ErrorDetail.builder().message(exception.getMessage())
                 .date(LocalDate.now())
                 .build(), HttpStatus.NOT_FOUND);
