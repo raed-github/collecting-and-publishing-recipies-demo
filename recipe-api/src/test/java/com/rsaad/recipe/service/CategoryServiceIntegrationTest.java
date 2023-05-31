@@ -2,6 +2,8 @@ package com.rsaad.recipe.service;
 
 import com.rsaad.recipe.model.Category;
 import com.rsaad.recipe.repository.CategoryRepository;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -47,7 +49,7 @@ public class CategoryServiceIntegrationTest {
     @Test
     @DisplayName("Category Service find by id should return Category")
     public void testFindByIdShouldReturnCategory(){
-        Category category = categoryService.saveCategory(Category.builder().category("vegan").build());
+        Category category = categoryService.saveCategory(Category.builder().category("abcdefghijk").build());
         Category savedCategory = categoryService.findById(category.getId());
         assertTrue(category!=null);
     }

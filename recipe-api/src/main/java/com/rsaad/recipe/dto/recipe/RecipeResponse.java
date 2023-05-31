@@ -24,6 +24,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RecipeResponse extends RepresentationModel<RecipeResponse> {
+    private Long recipeId;
     private String name;
     private int yield;
     private String preparationTime;

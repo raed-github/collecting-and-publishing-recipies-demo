@@ -1,10 +1,12 @@
 package com.rsaad.recipe.service;
 
-import com.rsaad.recipe.DataHolder;
+import com.rsaad.recipe.common.DataHolder;
 import com.rsaad.recipe.dto.recipe.RecipeCriteria;
 import com.rsaad.recipe.model.Category;
 import com.rsaad.recipe.model.Recipe;
 import com.rsaad.recipe.repository.RecipeRepository;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;

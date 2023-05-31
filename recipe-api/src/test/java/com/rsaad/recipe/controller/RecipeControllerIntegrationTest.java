@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rsaad.recipe.DataHolder;
+import com.rsaad.recipe.common.DataHolder;
 import com.rsaad.recipe.constants.ApplicationConstants;
 import com.rsaad.recipe.dto.recipe.RecipeCriteria;
 import com.rsaad.recipe.dto.recipe.RecipeRequest;
@@ -16,7 +16,7 @@ import com.rsaad.recipe.exceptions.recipe.RecipeNameExistException;
 import com.rsaad.recipe.exceptions.recipe.RecipeNotFoundException;
 import com.rsaad.recipe.model.Recipe;
 import com.rsaad.recipe.service.RecipeService;
-import com.rsaad.recipe.service.impl.DtoMapper;
+import com.rsaad.recipe.dto.DtoMapper;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;

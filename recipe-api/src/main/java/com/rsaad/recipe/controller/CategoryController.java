@@ -6,7 +6,7 @@ import com.rsaad.recipe.dto.recipe.RecipeResponse;
 import com.rsaad.recipe.model.Category;
 import com.rsaad.recipe.model.Recipe;
 import com.rsaad.recipe.service.CategoryService;
-import com.rsaad.recipe.service.impl.DtoMapper;
+import com.rsaad.recipe.dto.DtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

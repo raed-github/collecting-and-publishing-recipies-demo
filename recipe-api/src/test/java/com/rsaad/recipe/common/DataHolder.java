@@ -1,42 +1,15 @@
-package com.rsaad.recipe;
 
-import com.rsaad.recipe.model.Category;
-import com.rsaad.recipe.model.Direction;
-import com.rsaad.recipe.model.Ingredient;
-import com.rsaad.recipe.model.Recipe;
-import com.rsaad.recipe.repository.CategoryRepository;
-import com.rsaad.recipe.service.CategoryService;
-import com.rsaad.recipe.service.RecipeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+package com.rsaad.recipe.common;
 
-import javax.annotation.PostConstruct;
+import com.rsaad.recipe.model.*;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@SpringBootApplication
-public class RecipeApiApplication {
-    @Autowired
-    CategoryService categoryService;
-
-    @Autowired
-    RecipeService recipeService;
-    public static void main(String[] args) {
-        SpringApplication.run(RecipeApiApplication.class, args);
-    }
-
-    @PostConstruct
-    public void init(){
-//        Category category = this.returnCategoryList().get(0);
-//        categoryService.saveCategory(category);
-//
-//        Recipe recipe = this.returnRecipe().get(0);
-//        recipeService.saveRecipe(recipe);
-    }
-    public List<Recipe> returnRecipe(){
+public class DataHolder {
+    public static List<Recipe> returnRecipe(){
         Recipe recipe = Recipe.builder()
                 .name("Tomato salad with ricotta, broad beans and salsa verde")
                 .yield(1)
@@ -51,7 +24,7 @@ public class RecipeApiApplication {
         return Arrays.asList(recipe);
     }
 
-    public Set<Ingredient> returnIngredientSet(){
+    public static Set<Ingredient> returnIngredientSet(){
         Set<Ingredient> ingredientSet = new HashSet<Ingredient>();
 
         Ingredient ingredient = Ingredient.builder()
@@ -133,7 +106,7 @@ public class RecipeApiApplication {
         return ingredientSet;
     }
 
-    public Set<Category> returnCategorySet(){
+    public static Set<Category> returnCategorySet(){
         Category category = Category.builder()
                 .id(1L)
                 .category("vegetarian")
@@ -144,7 +117,7 @@ public class RecipeApiApplication {
         return categorySet;
     }
 
-    public Set<Direction> returnDirectionSet(){
+    public static Set<Direction> returnDirectionSet(){
         Set<Direction> directionSet = new HashSet<Direction>();
         Direction direction = Direction.builder()
                 .step("toss the sliced tomatoes and onion in a bowl with a bit of salt and set aside")
@@ -169,10 +142,9 @@ public class RecipeApiApplication {
         return directionSet;
     }
 
-    public List<Category> returnCategoryList() {
+    public static List<Category> returnCategoryList() {
         return Arrays.asList(Category.builder()
                 .id(1L).category("vegitarian")
                 .build());
     }
-
 }
