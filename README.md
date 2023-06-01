@@ -17,47 +17,77 @@ ___
 ### Spring Boot recipe api
 
 ---
-### Introduction
+## Introduction
 This Api create, retrives, and filter recipies based on a given url and query string and store it into the H2 in memory database
 
-### Summary
+## Summary
 This Api was created to create recipies with their categories and data.
 
-#### Requirements
-##UserStory1:As a web designer I would like to retrieve recipes from the back-end system so I can display them in my app
+## Requirements
+### UserStory1:As a web designer I would like to retrieve recipes from the back-end system so I can display them in my app
 
-#UserStory1 Requirements:
+#### UserStory1 Requirements:
 - Without any additional query parameters, should return all recipes known to the back-end service
 - Support filtering based on recipe category
 - Support search strings, with the service then trying to match these in relevant fields (for example name and category)
 
-## UserStory2 - As a web designer I would like to retrieve the available recipe categories so I can do more focused requests for specific recipe types
+### UserStory2 - As a web designer I would like to retrieve the available recipe categories so I can do more focused requests for specific recipe types
 
-# UserStory2 Requirements: 
+#### UserStory2 Requirements: 
 - Operation returns all recipe categories
 
-## UserStory3 - As a web designer I want to be able to add new recipes, so I can expand the recipe database with new, tasty and inspiring recipes
+### UserStory3 - As a web designer I want to be able to add new recipes, so I can expand the recipe database with new, tasty and inspiring recipes
 
-# UserStory Requirements:
+#### UserStory Requirements:
 - When given valid input, creates a new recipe in the backend which can then be retrieved by the service's clients
 - Make sure the provided input is valid
 - Do not allow multiple recipes with the same name (so people don't get confused)
 
-### Design
+## Design
 The application has 1 api inside a maven parent project
 * recipe-api
 
 ```html
 POST /api/v1/recipies
 ```
-#### ObjectModel
+
+```html
+POST /api/v1/recipies?name={n}&category={c}&sort=name&direction=asc
+```
+```html
+GET /api/v1/recipies
+```
+
+```html
+GET /api/v1/recipies/{id}
+```
+* category
+
+```html
+POST /api/v1/categories
+```
+
+```html
+GET /api/v1/categories
+```
+
+```html
+GET /api/v1/categories/{id}
+```
+
+```html
+POST /api/v1/categories/{id}/recipies
+```
+---
+### ObjectModel
 - Recipe
 - Category
 - Direction
 - Ingredient
 
+---
+### Representation
 
-#### Representation
 category:
 ```html
     {
@@ -116,44 +146,63 @@ Recipe:
     ]
 }
 ```
+---
+## More actions
+    Logging
+        - logging is implemented arround methods using aop
+    
+    Audding
+        - Auditing is supported using spring data jpa library
 
+    Security
+        - currenty recipe api has no security features
+---
 #### RecipeApiModelUriAndHttpMethods
 
-| API Name | HTTP Method | Model URIs | Status code | Description | 
-| --------------- | --------------- | --------------- | --------------- | --------------- |
-| recipe-api | POST| /api/v1/recipies | 201 (CREATED)| Creating a recipe |
-| recipe-api | GET| /api/v1/recipies |  200 (OK)| Get all recipies |
-| recipe-api | GET| /api/v1/recipies/{id} |  200 (OK)| Get recipe by id |
-| recipe-api | POST| /api/v1/categories | 201 (CREATED)| Creating a category |
-| recipe-api | POST| /api/v1/categories | 400 (Bad Request)| field validation error |
-| recipe-api | GET| /api/v1/categories | 200 (OK)| Retrieve all categories |
-| recipe-api | GET| /api/v1/categories/{id} | 201 (OK)| Retrieve category by id |
-| recipe-api | GET| /api/v1/categories/{id} | 201 (OK)| Retrieve category by id |
-| recipe-api | GET| /api/v1/categories/{id}/recipies | 201 (OK)| Retrieve category recipies |
-| recipe-api | GET| /api/v1/recipies?name=recipe1&category=category1&sort=name&direction=desc |  200 (OK)| Get recipe by id |
+| API Name        | HTTP Method | Model URIs | Status code                  | Description                            | 
+|-----------------|-------------| --------------- |------------------------------|----------------------------------------|
+| recipe-api      | POST        | /api/v1/recipies | 201 (CREATED)                | Creating a recipe                      |
+| recipe-api      | POST        | /api/v1/recipies | 409 (Conflict)               | Creating a recipe with existing name   |
+| recipe-api      | POST        | /api/v1/recipies | 400 (BAD Reuest)             | Validation errors                      |
+| recipe-api      | POST/GET    | /api/v1/recipies | 500 (Internal Server Errors) | Un handled framework exceptions        |
+| recipe-api      | GET         | /api/v1/recipies | 200 (OK)                     | Get all recipies                       |
+| recipe-api      | GET         | /api/v1/recipies/{id} | 200 (OK)                     | Get recipe by id                       |
+| recipe-api      | POST        | /api/v1/categories | 201 (CREATED)                | Creating a category                    |
+| recipe-api      | POST        | /api/v1/categories | 409 (Conflict)               | Creating a category with existing name |
+| recipe-api      | POST        | /api/v1/categories | 400 (Bad Request)            | field validation error                 |
+| recipe-api      | GET         | /api/v1/categories | 200 (OK)                     | Retrieve all categories                |
+| recipe-api      | GET         | /api/v1/categories/{id} | 201 (OK)                     | Retrieve category by id                |
+| recipe-api      | GET         | /api/v1/categories/{id} | 201 (OK)                     | Retrieve category by id                |
+| recipe-api      | GET         | /api/v1/categories/{id}/recipies | 201 (OK)                     | Retrieve category recipies             |
+| recipe-api      | GET         | /api/v1/recipies?name=recipe1&category=category1&sort=name&direction=desc | 200 (OK)                     | Get recipe by id                       |
 
-### ArchitecturalConstraints
+## ArchitecturalConstraints
+#
+#### Uniform interface
 
-### Uniform interface
-
+```
 1- All resources in the api can be fetched using a logical URI
 2- HATEOAS are added inorder to avoid large resources
 3- All resource representations accross the system follow naming conventions, and links best pratices
 4- All resources are accessible through a common approach such as HTTP GET and similarly modified using a consistent approach.
+```
+#
 
-
-### Client–server
-
+#### Client–server
+```
 1-client application (MX) and server application (recipe-api) are able to evolve separately without any dependency on each other
-
-### Stateless
-
+```
+#
+#### Stateless
+```
 1-The server will not store anything about the latest HTTP request the client made. It will treat every request as new. No session, no history
-
-### Layered system
-
+```
+#
+#### Layered system
+```
 1-recipe-api follows layered system architecture where you deploy the APIs on server A, and store data on server B and authenticate requests in Server C.
-
+```
+#
 ## DatabaseDesignAndRelations
 
 | TableName | Reference Object | Association | ReferenceTable | Description | 
@@ -165,8 +214,9 @@ Recipe:
 | Direction | Direction| ManyToOne |  Recipe | Many directions can be linked to one recipe |
 | Ingredient | Ingredient| ManyToMany |  Recipe | Same ingredient can be used by multiple categories |
 
-# JUnit & integration, Acceptance tests coverage.
-
+#
+## JUnit & integration, Acceptance tests coverage.
+#
 ### TechStack
 
 ---
@@ -194,12 +244,13 @@ Recipe:
 - Hateoas
 - Spring docs openapi-ui
 
-### Run & Build
+## Run & Build
 
 ---
+````
 There are 2 ways of run & build the application.
-
-#### Docker Compose
+````
+### Docker Compose
 
 For docker compose usage, docker images already push to docker.io
 
@@ -211,28 +262,31 @@ $ cd  recipe-api
 $ docker-compose up
 ```
 
-#### Maven
+### Maven
 
 ___
 *$PORT: *
 ```ssh
-$ cd  c:/technical-assignment/recipe-api
+$ cd  c:/collecting-and-publishing-recipies-demo/recipe-api
 $ mvn clean install
 $ mvn spring-boot:run
 
 ```
-
-### Testing
+## Testing
 - Integration and Acceptance testing are coverd for this api and can be executed successfully
 
-- Postman Testing
+### Postman Testing
 
-test case 1: Create a correct Category Test Case
+---
+
+### test case 1: Create a correct Category Test Case
 ```ssh
-    {
-        "category":"vegitarian"
-    }
+POST request
+{
+     "category":"vegitarian"
+}
 
+response:
 {
     "id": 1,
     "category": "vegitarian",
@@ -248,24 +302,28 @@ test case 1: Create a correct Category Test Case
 }
 ```
 
-test case 2: Create a category with existing name
+### test case 2: Create a category with existing name
 ```ssh
-    {
-        "category":"vegitarian"
-    }
-
+POST Request
+{
+    "category":"vegitarian"
+}
+    
+Response
 {
     "message": "Category name already exist",
     "date": "2023-05-31"
 }
 ```
 
-testcase 3:Create a category with no name
+### testcase 3:Create a category with no name
 ```ssh
-    {
+Empty Request
+{ 
     
-    }
+}
 
+Error Response
 {
     "fieldErrors": [
         {
@@ -276,10 +334,12 @@ testcase 3:Create a category with no name
 }
 ```
 
-testcase 4: Retrieve all categories
+### testcase 4: Retrieve all categories
 ```ssh
+GET Request
 http://localhost:8081/api/v1/categories
 
+Response
 [
     {
         "id": 1,
@@ -300,18 +360,22 @@ http://localhost:8081/api/v1/categories
 
 testcase 5: Retrieve category by id
 ```ssh
+Get Request
 http://localhost:8080/api/v1/categories/1
 
+Response
 {
     "id": 1,
     "category": "vegitarian"
 }
 ```
 
-test case 6: retrieve category recipies
+### test case 6: retrieve category recipies
 ```ssh
+Get Request
 localhost:8081/api/v1/categories/1/recipies
 
+Response
 [
     {
         "recipeId": 1,
@@ -327,13 +391,7 @@ localhost:8081/api/v1/categories/1/recipies
             },
             {
                 "step": "Finely chop the herbs for the salsa verde. Pound the garlic, Dijon mustard and capers using a pestle and mortar and add to the herbs. Add seasoning and the oil. Add the vinegar, little by little, tasting as you go, until the sauce has the right amount of acidity – it needs to be punchy without losing the grassy, fresh flavour of the herbs."
-            },
-            {
-                "step": "Bring a pan of water to the boil and plunge the broad beans in for a couple of mins, then drain, cool in cold water and peel away the shells."
-            },
-            {
-                "step": "Divide the tomatoes and onions between plates or spread out on a platter. Dot the ricotta around and spoon over the salsa verde. Scatter with broad beans and serve."
-            }
+            }            
         ],
         "categories": [
             {
@@ -361,52 +419,7 @@ localhost:8081/api/v1/categories/1/recipies
                 "ingredient": "small capers, drained",
                 "quantity": 2.0,
                 "unit": "tsp"
-            },
-            {
-                "ingredient": "good quality sherry vinegar",
-                "quantity": 1.0,
-                "unit": "tsp"
-            },
-            {
-                "ingredient": "extra virgin olive oil",
-                "quantity": 150.0,
-                "unit": "ml"
-            },
-            {
-                "ingredient": "ricotta",
-                "quantity": 50.0,
-                "unit": "gram"
-            },
-            {
-                "ingredient": "Dijon mustard",
-                "quantity": 1.0,
-                "unit": "tsp"
-            },
-            {
-                "ingredient": "garlic, finely chopped",
-                "quantity": 1.0,
-                "unit": "clove"
-            },
-            {
-                "ingredient": "heirloom tomatoes of different shapes and sizes, sliced and cut in different ways",
-                "quantity": 650.0,
-                "unit": "gram"
-            },
-            {
-                "ingredient": "red onion, finely sliced",
-                "quantity": 0.5,
-                "unit": null
-            },
-            {
-                "ingredient": "podded broad beans",
-                "quantity": 100.0,
-                "unit": "gram"
-            },
-            {
-                "ingredient": "chervil, leaves only",
-                "quantity": 1.0,
-                "unit": "pack"
-            }
+            }       
         ],
         "links": [
             {
@@ -417,8 +430,9 @@ localhost:8081/api/v1/categories/1/recipies
     }
 ]
 ```
-testcase 7: Create recipe
+### testcase 7: Create recipe
 ```ssh
+POST Request
 {
 	"name":"recipe3",
 	"yield":1,
@@ -499,9 +513,11 @@ testcase 7: Create recipe
 			"ingredient":"good quality sherry vinegar",
 	        "quantity":1,
 	        "unit":"tsp"
-	}
+	    }
     ]
 }
+
+Response
 {
     "recipeId": 2,
     "name": "recipe3",
@@ -602,9 +618,9 @@ testcase 7: Create recipe
     }
 }
 ```
-
-testcase 8: Create recipe with existing name
+### testcase 8: Create recipe with existing name
 ```ssh
+POST Request
 {
 	"name":"recipe3",
 	"yield":1,
@@ -689,15 +705,19 @@ testcase 8: Create recipe with existing name
     ]
 }
 
+Error Response
+
 {
     "message": "Recipe category already used",
     "date": "2023-05-31"
 }
 ```
-testcase 9: Retrieve all recipies
+### testcase 9: Retrieve all recipies
 ```ssh
-localhost:8081/api/v1/recipies1
+GET Request
+localhost:8081/api/v1/recipies
 
+Response
 [
     {
         "recipeId": 1,
@@ -905,9 +925,12 @@ localhost:8081/api/v1/recipies1
     }
 ]
 ```
-testcase 10: Retrieve all recipies
+### testcase 10: Retrieve all recipies
 ```ssh
+GET Request
 localhost:8081/api/v1/recipies?name=recipe2&category=vegitarian&sort=name&direction=desc
+
+Resposne
 [
     {
         "recipeId": 1,
@@ -1014,8 +1037,9 @@ localhost:8081/api/v1/recipies?name=recipe2&category=vegitarian&sort=name&direct
 ]
 ```
 
-testcase 11: Create a recipe with no category
+### testcase 11: Create a recipe with no category
 ```ssh
+POST Request
 {
 	"name":"recipe3",
 	"yield":1,
@@ -1094,16 +1118,18 @@ testcase 11: Create a recipe with no category
     ]
 }
 
+Response
 {
     "message": "Category missing from request",
     "date": "2023-05-31"
 }
 ```
 
-testcase 12: create category with no ingredient
+###testcase 12: create category with no ingredient
 ```ssh
-same request with no ingredients
+Request (same as previous request but with no ingredients)
 
+Error Resposne
 {
     "message": "Ingredient is missing from request",
     "date": "2023-05-31"
